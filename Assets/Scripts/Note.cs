@@ -8,6 +8,8 @@ public class Note : MonoBehaviour
     private Transform hitTransform;
     private bool canHit = false;
     public GameObject hitObject;
+    public GameObject scoreManager;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Hit")
@@ -31,7 +33,7 @@ public class Note : MonoBehaviour
             if (canHit)
             {
                 int score = Math.Max(0, 100 - (int) (Math.Abs(gameObject.transform.parent.localPosition.y + gameObject.transform.localPosition.y - hitTransform.transform.parent.localPosition.y) * 100));
-                print(score);
+                scoreManager.GetComponent<ScoreManager>().updateScore(score);
                 Destroy(gameObject);
             }
         }

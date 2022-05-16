@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitObject: {fileID: 7490129009094755144, guid: 5df2ecc25eed246038286f6fb7335495, type: 3}
+  scoreManager: {fileID: 6529403993584754785, guid: d83dca30fae104e5995be2a518eaa158, type: 3}
 --- !u!61 &-447262748892163100
 BoxCollider2D:
   m_ObjectHideFlags: 0
