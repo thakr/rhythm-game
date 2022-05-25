@@ -8,6 +8,7 @@ public class NoteScroller : MonoBehaviour
 
 
     public float songBPM;
+    public string songName;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +18,7 @@ public class NoteScroller : MonoBehaviour
     {
         hasStarted = true;
     }
+
     // Update is called once per frame
     void Update()
     {

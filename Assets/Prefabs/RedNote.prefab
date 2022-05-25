@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 4945369583306378121}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.71, y: 0.10012616, z: -0.02476079}
-  m_LocalScale: {x: 0.46, y: 0.46, z: 0.46}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitObject: {fileID: 8566143912757770113, guid: 6abbe6ee8d9064c2987c67934f7673d7, type: 3}
   scoreManager: {fileID: 6529403993584754785, guid: d83dca30fae104e5995be2a518eaa158, type: 3}
+  explosion: {fileID: 7371402943501263081, guid: b76ab6450d52440a4bb1565d8fe8320b, type: 3}
 --- !u!61 &-3054066549127716537
 BoxCollider2D:
   m_ObjectHideFlags: 0

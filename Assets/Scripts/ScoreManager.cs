@@ -13,12 +13,37 @@ public class ScoreManager : MonoBehaviour
     private float prevTime = 0f;
     public void updateScore(int points)
     {
-        
-        pointsPlus.GetComponent<TextMeshProUGUI>().text = "+" + points;
+        this.prevTime = Time.time;
+        if (points > 80)
+        {
+            pointsPlus.GetComponent<TextMeshProUGUI>().text = "Perfect!\n+" + points;
+        }
+        else if (points > 60){
+            pointsPlus.GetComponent<TextMeshProUGUI>().text = "Great!\n+" + points;
+        }
+        else if (points > 0)
+        {
+            pointsPlus.GetComponent<TextMeshProUGUI>().text = "Good!\n+" + points;
+        }
+        else
+        {
+            pointsPlus.GetComponent<TextMeshProUGUI>().text = "Missed!\n+" + points;
+        }
         pointsPlus.GetComponent<Animator>().SetTrigger("Show");
-
         this.points += points;
 
+    }
+    public void resetPoints(bool disableText = false)
+    {
+        this.points = 0;
+        if (disableText)
+        {
+            scoreText.SetActive(false);
+        }
+    }
+    public int getPoints()
+    {
+        return this.points;
     }
     void resetText()
     {
@@ -27,7 +52,7 @@ public class ScoreManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.time - prevTime > 5f)
+        if (Time.time - prevTime > 3f)
         {
             this.prevTime = Time.time;
             pointsPlus.GetComponent<Animator>().SetTrigger("Hide");

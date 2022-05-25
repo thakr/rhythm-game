@@ -9,6 +9,7 @@ public class Note : MonoBehaviour
     private bool canHit = false;
     public GameObject hitObject;
     public GameObject scoreManager;
+    public GameObject explosion;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -24,6 +25,11 @@ public class Note : MonoBehaviour
         {
             canHit = false;
             hitTransform = null;
+            if (gameObject.activeSelf)
+            {
+                scoreManager.GetComponent<ScoreManager>().updateScore(0);
+            }
+
         }
     }
     private void Update()
@@ -32,8 +38,12 @@ public class Note : MonoBehaviour
         {
             if (canHit)
             {
+                HitAudioPlayer.playHitSound();
                 int score = Math.Max(0, 100 - (int) (Math.Abs(gameObject.transform.parent.localPosition.y + gameObject.transform.localPosition.y - hitTransform.transform.parent.localPosition.y) * 100));
                 scoreManager.GetComponent<ScoreManager>().updateScore(score);
+                gameObject.SetActive(false);
+                GameObject explosionObj = Instantiate(explosion);
+                explosionObj.transform.position = gameObject.transform.position;
                 Destroy(gameObject);
             }
         }
