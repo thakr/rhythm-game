@@ -5,12 +5,12 @@ using TMPro;
 using UnityEngine.UI;
 public class Manager : MonoBehaviour
 {
-    public AudioClip song;
     public AudioSource audioSource;
     public float manualMapOffset;
     public GameObject SongMap;
     public GameObject ScoreManager;
     public GameObject CountdownTimer;
+    public GameObject MainMenu;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI completeText;
     public Image ScoreFill;
@@ -21,18 +21,27 @@ public class Manager : MonoBehaviour
 
     public void Finish()
     {
-        songPlaying = false;
-        StartCoroutine(AudioHelper.FadeOut(audioSource, 1f));
-        Destroy(GameObject.FindGameObjectWithTag("GameMap"));
         int points = ScoreManager.GetComponent<ScoreManager>().getPoints();
-        
+
+        songPlaying = false;
+        ScoreTextMain.SetActive(false);
+        StartCoroutine(AudioHelper.FadeOut(audioSource, 1f));
         scoreText.text = points.ToString();
-        int totalPossiblePoints = GameObject.FindGameObjectWithTag("GameMap").transform.childCount * 100;
+
         string songName = GameObject.FindGameObjectWithTag("GameMap").GetComponent<NoteScroller>().songName;
+        int totalPossiblePoints = GameObject.FindGameObjectWithTag("GameMap").GetComponent<NoteScroller>().possiblePoints;
+
+        print(totalPossiblePoints);
         ScoreFill.fillAmount = (float) points / totalPossiblePoints;
         completeText.text = "You completed <b>" + songName + "</b> with a score of:";
+        Destroy(GameObject.FindGameObjectWithTag("GameMap"));
         GameOverScreen.SetActive(true);
 
+    }
+    public void changeSong(AudioSource audioSource, GameObject songMap)
+    {
+        this.audioSource = audioSource;
+        this.SongMap = songMap;
     }
     private void Start()
     {
@@ -41,27 +50,35 @@ public class Manager : MonoBehaviour
     public void setAbleToPlay(bool val)
     {
         ableToPlay = val;
+        MainMenu.SetActive(val);
     }
     void Update()
     {
         if (Input.anyKeyDown && ableToPlay && !songPlaying)
         {
-            ableToPlay = false;
-            songPlaying = true;
-            ScoreTextMain.SetActive(true);
-            GameObject newSongMap = Instantiate(SongMap);
-            Note[] notes = newSongMap.GetComponentsInChildren<Note>();
-            FinishNote finish = newSongMap.GetComponentInChildren<FinishNote>();
-            finish.Manager = this;
-            foreach (Note n in notes)
+            if (Input.GetKey(KeyCode.Mouse0) || Input.GetKey(KeyCode.Mouse1))
             {
-                n.scoreManager = ScoreManager;
+                return;
+            } else
+            {
+                MainMenu.SetActive(false);
+                ableToPlay = false;
+                songPlaying = true;
+                ScoreTextMain.SetActive(true);
+                ScoreManager.GetComponent<ScoreManager>().setPoints(0);
+                GameObject newSongMap = Instantiate(SongMap);
+                Note[] notes = newSongMap.GetComponentsInChildren<Note>();
+                FinishNote finish = newSongMap.GetComponentInChildren<FinishNote>();
+                finish.Manager = this;
+                foreach (Note n in notes)
+                {
+                    n.scoreManager = ScoreManager;
+                }
+                newSongMap.transform.localPosition = Vector3.zero + new Vector3(0f, manualMapOffset, 0f);
+                newSongMap.GetComponent<NoteScroller>().songBPM = newSongMap.GetComponent<NoteScroller>().songBPM / 60f * 2f;
+                audioSource.time = 0f;
+                StartCoroutine(Countdown(newSongMap));
             }
-            newSongMap.transform.localPosition = Vector3.zero + new Vector3(0f, manualMapOffset, 0f);
-            newSongMap.GetComponent<NoteScroller>().songBPM = newSongMap.GetComponent<NoteScroller>().songBPM / 60f * 2f ;
-            audioSource.clip = song;
-            audioSource.time = 0f;
-            StartCoroutine(Countdown(newSongMap));
             
         }
     }
@@ -78,6 +95,7 @@ public class Manager : MonoBehaviour
             {
                 newSongMap.GetComponent<NoteScroller>().startScroll();
                 audioSource.Play();
+                StartCoroutine(AudioHelper.FadeIn(audioSource, 1f));
                 CountdownTimer.GetComponent<TextMeshProUGUI>().text = "";
                 ScoreTextMain.SetActive(true);
                 yield break;

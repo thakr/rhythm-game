@@ -9,10 +9,11 @@ public class NoteScroller : MonoBehaviour
 
     public float songBPM;
     public string songName;
-
+    public int possiblePoints;
     // Start is called before the first frame update
     void Start()
     {
+        possiblePoints = (transform.childCount - 1) * 100;
     }
     public void startScroll ()
     {
